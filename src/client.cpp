@@ -21,8 +21,8 @@ Client::~Client()
 {
 }
 
-const QString Client::CHANNEL_URL = "http://www.douban.com/j/app/radio/channels";
-const QString Client::SONG_URL = "http://www.douban.com/j/app/radio/people";
+const QString Client::CHANNEL_URL = "http://douban.fm/j/app/radio/channels";
+const QString Client::SONG_URL = "http://douban.fm/j/app/radio/people";
 
 void Client::login(QString user_id, QString expire, QString token)
 {
@@ -131,6 +131,7 @@ QUrl Client::genUrl(OpType type, int ch_id)
 
     q.addQueryItem("app_name", "radio_desktop_win");
     q.addQueryItem("version", "100");
+    q.addQueryItem("kbps", "192");
 
     if (login_) {
         q.addQueryItem("user_id", user_id_);
