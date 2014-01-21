@@ -20,7 +20,7 @@ public:
     void setReply(QNetworkReply *reply, Client::OpType type);
 
 signals:
-    void finish(Client::OpType type, bool success, QString message, QJsonObject *obj);
+    void finish(Client::OpType type, bool success, QString message, QJsonObject obj);
 
 public slots:
     // emmit signal finish

@@ -3,9 +3,11 @@
 #include <QJsonDocument>
 #include <QJsonParseError>
 #include <QJsonObject>
+#include <QJsonArray>
 #include <QTextStream>
 #include <QDebug>
 #include <QNetworkReply>
+#include <QUrlQuery>
 #include "operationprocessor.h"
 
 Client::Client(QObject *parent) :
@@ -18,6 +20,9 @@ Client::Client(QObject *parent) :
 Client::~Client()
 {
 }
+
+const QString Client::CHANNEL_URL = "http://www.douban.com/j/app/radio/channels";
+const QString Client::SONG_URL = "";
 
 void Client::login(QString user_id, qint64 expire, QString token)
 {
@@ -94,28 +99,87 @@ void Client::doOperation(OpType type, int ch_id)
 
 void Client::refreshChannel()
 {
+    doOperation_(OP_REFRESH_CHANNEL, QUrl(CHANNEL_URL));
 }
 
 void Client::doEnd()
 {
-    // do something, then call doOperation_
-    QUrl url("http://");
-    doOperation_(OP_END, url);
+    doOperation_(OP_END, genUrl(OP_END));
+}
+
+void Client::doSkip()
+{
+    doOperation_(OP_SKIP, genUrl(OP_SKIP));
+}
+
+void Client::doRate()
+{
+    doOperation_(OP_RATE, genUrl(OP_RATE));
+}
+
+void Client::doTrash()
+{
+    doOperation_(OP_TRASH, genUrl(OP_TRASH));
+}
+
+QUrl Client::genUrl(OpType type)
+{
+    QUrl url(SONG_URL);
+    QUrlQuery q;
+
+    q.addQueryItem("aa", "bb");
+
+    if (login_) {
+    }
+
+    switch (type) {
+    case OP_END:
+        q.addQueryItem("type", "e");
+        break;
+    case OP_RATE:
+        if (getLike()) {
+            q.addQueryItem("type", "u");
+        }
+        else {
+            q.addQueryItem("type", "r");
+        }
+        break;
+    case OP_SKIP:
+        q.addQueryItem("type", "s");
+        break;
+    case OP_TRASH:
+        q.addQueryItem("type", "b");
+        break;
+    case OP_UPDTE_PLAYLIST:
+        q.addQueryItem("type", "n");
+        break;
+    default:
+        break;
+    }
+
+    url.setQuery(q);
+
+    return url;
 }
 
 void Client::doOperation_(OpType type, QUrl url)
 {
     OperationProcessor *cp = new OperationProcessor(this);
+    connect(cp, SIGNAL(finish(Client::OpType,bool,QString,QJsonObject)),
+            SLOT(operationFinish_(Client::OpType,bool,QString,QJsonObject)));
 
     QNetworkReply *reply = manager_.get(QNetworkRequest(url));
     cp->setReply(reply, type);
 }
 
-void Client::operationFinish_(OpType type, bool success, QString message, QJsonObject *obj)
+void Client::operationFinish_(Client::OpType type, bool success,
+                  QString message, QJsonObject obj)
 {
     if (success) {
         switch (type) {
         case OP_REFRESH_CHANNEL:
+            channel_ = obj["channels"].toArray();
+            qDebug() << "refresh channel" << channel_;
             break;
         case OP_END:
             break;
@@ -129,6 +193,20 @@ void Client::operationFinish_(OpType type, bool success, QString message, QJsonO
             break;
         }
     }
+    else {
+        qDebug() << "operation fail, type:" << type << "message:" << message;
+    }
 
     emit(operationFinish(type, success, message));
+}
+
+
+bool Client::getLike()
+{
+    return (playlist_[track_].toObject()["like"].toInt() != 0);
+}
+
+QString Client::getSid()
+{
+    return (playlist_[track_].toObject()["sid"].toString());
 }

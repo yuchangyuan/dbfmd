@@ -23,6 +23,7 @@ int main(int argc, char *argv[])
         if (0 == client) {
             QCoreApplication::exit(EXIT_FAILURE);
         }
+        client->refreshChannel();
     }
 
     return a.exec();

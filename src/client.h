@@ -2,6 +2,8 @@
 #define CLIENT_H
 
 #include <QObject>
+#include <QJsonArray>
+#include <QJsonObject>
 #include <QNetworkAccessManager>
 
 class Client : public QObject
@@ -14,6 +16,10 @@ public:
         OP_END, OP_SKIP, OP_RATE, OP_TRASH,
         OP_UPDTE_PLAYLIST, OP_REFRESH_CHANNEL
     } OpType;
+
+    static const QString CHANNEL_URL;
+    static const QString SONG_URL;
+
 
 private:
 
@@ -28,16 +34,17 @@ private:
     QNetworkAccessManager manager_;
 
     // playlist, and current track, index in playlist
-    QJsonArray *playlist_;
+    QJsonArray playlist_;
     int track_;
 
     // channel list and current channel id
-    QJsonArray *channel_;
+    QJsonArray channel_;
     int ch_id_;
 
 
     // function
     void doOperation_(OpType type, QUrl url);
+    QUrl genUrl(OpType type);
 
 public:
     explicit Client(QObject *parent = 0);
@@ -48,7 +55,7 @@ public:
     static Client* create(QString login_json, QObject *parent = 0);
 
     void refreshChannel();
-    QJsonArray* channelList();
+    QJsonArray channelList();
 
     // song operation, should only operate in single thread
     void doOperation(OpType type, int ch_id = -1);
@@ -60,17 +67,20 @@ public:
     void doUpdatePlaylist(int ch_id = -1);  // get playlist
 
     // current status
-    QJsonArray* currentPlaylist();
+    QJsonArray currentPlaylist();
     int currentTrack();
     int currentChannel();
 
+    QString getSid();
+    bool getLike();
 signals:
     void operationFinish(OpType type, bool success, QString message);
 
 public slots:
 
 private slots:
-    void operationFinish_(OpType type, bool success, QString message, QJsonObject *obj);
+    void operationFinish_(Client::OpType type, bool success,
+                          QString message, QJsonObject obj);
 };
 
 #endif // CLIENT_H
