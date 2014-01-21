@@ -24,7 +24,7 @@ public:
 private:
 
     QString user_id_;
-    qint64 expire_;
+    QString expire_;
     QString token_;
 
     // has login info?
@@ -44,13 +44,13 @@ private:
 
     // function
     void doOperation_(OpType type, QUrl url);
-    QUrl genUrl(OpType type);
+    QUrl genUrl(OpType type, int ch_id = -1);
 
 public:
     explicit Client(QObject *parent = 0);
     ~Client();
 
-    void login(QString user_id, qint64 expire, QString token);
+    void login(QString user_id, QString expire, QString token);
     void logout();
     static Client* create(QString login_json, QObject *parent = 0);
 

@@ -22,9 +22,9 @@ Client::~Client()
 }
 
 const QString Client::CHANNEL_URL = "http://www.douban.com/j/app/radio/channels";
-const QString Client::SONG_URL = "";
+const QString Client::SONG_URL = "http://www.douban.com/j/app/radio/people";
 
-void Client::login(QString user_id, qint64 expire, QString token)
+void Client::login(QString user_id, QString expire, QString token)
 {
     user_id_ = user_id;
     expire_ = expire;
@@ -69,13 +69,7 @@ Client* Client::create(QString login_json, QObject *parent)
         return 0;
     }
 
-    bool ok;
-    qint64 expire1 = expire.toString().toLongLong(&ok);
-    if (!ok) {
-        cerr << "expire type not int" << endl;
-        return 0;
-    }
-
+    QString expire1 = expire.toString();
     QString token1 = token.toString();
     QString user_id1 = user_id.toString();
 
@@ -91,6 +85,9 @@ void Client::doOperation(OpType type, int ch_id)
         break;
     case OP_END:
         doEnd();
+        break;
+    case OP_UPDTE_PLAYLIST:
+        doUpdatePlaylist(ch_id);
         break;
     default:
         break;
@@ -122,15 +119,37 @@ void Client::doTrash()
     doOperation_(OP_TRASH, genUrl(OP_TRASH));
 }
 
-QUrl Client::genUrl(OpType type)
+void Client::doUpdatePlaylist(int ch_id)
+{
+    doOperation_(OP_UPDTE_PLAYLIST, genUrl(OP_UPDTE_PLAYLIST, ch_id));
+}
+
+QUrl Client::genUrl(OpType type, int ch_id)
 {
     QUrl url(SONG_URL);
     QUrlQuery q;
 
-    q.addQueryItem("aa", "bb");
+    q.addQueryItem("app_name", "radio_desktop_win");
+    q.addQueryItem("version", "100");
 
     if (login_) {
+        q.addQueryItem("user_id", user_id_);
+        q.addQueryItem("expire", expire_);
+        q.addQueryItem("token", token_);
     }
+
+    if (type != OP_UPDTE_PLAYLIST) {
+        q.addQueryItem("sid", getSid());
+    }
+
+    QString chstr;
+    // NOTE: ch_id_ update here, not in callback,
+    // there's no way to pass it to callback currently
+    if ((type == OP_UPDTE_PLAYLIST) && (ch_id != -1)) {
+        ch_id_ = ch_id;
+    }
+    chstr.sprintf("%d", ch_id_);
+    q.addQueryItem("channel", chstr);
 
     switch (type) {
     case OP_END:
@@ -168,6 +187,7 @@ void Client::doOperation_(OpType type, QUrl url)
     connect(cp, SIGNAL(finish(Client::OpType,bool,QString,QJsonObject)),
             SLOT(operationFinish_(Client::OpType,bool,QString,QJsonObject)));
 
+    qDebug() << "request url:" << url;
     QNetworkReply *reply = manager_.get(QNetworkRequest(url));
     cp->setReply(reply, type);
 }
@@ -190,6 +210,11 @@ void Client::operationFinish_(Client::OpType type, bool success,
         case OP_TRASH:
             break;
         case OP_UPDTE_PLAYLIST:
+            playlist_ = obj["song"].toArray();
+            track_ = 0;
+
+            qDebug() << "update playlist, channel:" << ch_id_ <<
+                        "return:" << obj;
             break;
         }
     }

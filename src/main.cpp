@@ -24,6 +24,7 @@ int main(int argc, char *argv[])
             QCoreApplication::exit(EXIT_FAILURE);
         }
         client->refreshChannel();
+        client->doUpdatePlaylist();
     }
 
     return a.exec();
