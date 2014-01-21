@@ -3,7 +3,7 @@
 #include <QDebug>
 #include <QString>
 #include "login.h"
-#include <QNetworkAccessManager>
+#include "client.h"
 
 int main(int argc, char *argv[])
 {
@@ -12,11 +12,17 @@ int main(int argc, char *argv[])
     if (a.arguments().size() < 2) {
         qDebug() << "Not specify token file, do login.";
 
-        // NOTE: should use create on heap
+        // NOTE: should create on heap
         Login* login = new Login(&a);
 
         login->doInput();
         login->doLogin();
+    }
+    else {
+        Client *client = Client::create(a.arguments()[1], &a);
+        if (0 == client) {
+            QCoreApplication::exit(EXIT_FAILURE);
+        }
     }
 
     return a.exec();
