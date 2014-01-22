@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core network
+QT       += core network multimedia
 
 QT       -= gui
 
@@ -19,10 +19,12 @@ SOURCES += src/main.cpp \
     src/login.cpp \
     src/client.cpp \
     src/operationprocessor.cpp \
-    src/control.cpp
+    src/control.cpp \
+    src/player.cpp
 
 HEADERS += \
     src/login.h \
     src/client.h \
     src/operationprocessor.h \
-    src/control.h
+    src/control.h \
+    src/player.h

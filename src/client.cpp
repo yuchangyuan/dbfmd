@@ -279,3 +279,13 @@ QString Client::getSid()
 {
     return (playlist_[track_].toObject()["sid"].toString());
 }
+
+int Client::currentTrack()
+{
+    return track_;
+}
+
+QJsonArray Client::currentPlaylist()
+{
+    return playlist_;
+}

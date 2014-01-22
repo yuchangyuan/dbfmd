@@ -4,6 +4,7 @@
 #include <QString>
 #include "login.h"
 #include "client.h"
+#include "control.h"
 
 int main(int argc, char *argv[])
 {
@@ -23,8 +24,9 @@ int main(int argc, char *argv[])
         if (0 == client) {
             QCoreApplication::exit(EXIT_FAILURE);
         }
-        client->refreshChannel();
-        client->doUpdatePlaylist();
+        Player *player = new Player(&a);
+        Control *control = new Control(client, player, &a);
+        control->start();
     }
 
     return a.exec();

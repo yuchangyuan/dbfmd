@@ -75,7 +75,7 @@ public:
     bool getLike();
     bool playlistEmpty();
 signals:
-    void operationFinish(OpType type, bool success, QString message);
+    void operationFinish(Client::OpType type, bool success, QString message);
 
 public slots:
 
