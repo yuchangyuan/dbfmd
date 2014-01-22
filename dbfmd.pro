@@ -18,9 +18,11 @@ TEMPLATE = app
 SOURCES += src/main.cpp \
     src/login.cpp \
     src/client.cpp \
-    src/operationprocessor.cpp
+    src/operationprocessor.cpp \
+    src/control.cpp
 
 HEADERS += \
     src/login.h \
     src/client.h \
-    src/operationprocessor.h
+    src/operationprocessor.h \
+    src/control.h
