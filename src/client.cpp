@@ -86,6 +86,15 @@ void Client::doOperation(OpType type, int ch_id)
     case OP_END:
         doEnd();
         break;
+    case OP_RATE:
+        doRate();
+        break;
+    case OP_SKIP:
+        doSkip();
+        break;
+    case OP_TRASH:
+        doTrash();
+        break;
     case OP_UPDTE_PLAYLIST:
         doUpdatePlaylist(ch_id);
         break;
@@ -101,27 +110,62 @@ void Client::refreshChannel()
 
 void Client::doEnd()
 {
+    if (playlistEmpty()) {
+        emit(operationFinish(OP_TRASH, false, "playlist empty"));
+        return;
+    }
+
     doOperation_(OP_END, genUrl(OP_END));
 }
 
 void Client::doSkip()
 {
+    if (playlistEmpty()) {
+        emit(operationFinish(OP_TRASH, false, "playlist empty"));
+        return;
+    }
+
     doOperation_(OP_SKIP, genUrl(OP_SKIP));
 }
 
 void Client::doRate()
 {
+    if (!login_) {
+        emit(operationFinish(OP_TRASH, false, "not login"));
+        return;
+    }
+
+    if (playlistEmpty()) {
+        emit(operationFinish(OP_TRASH, false, "playlist empty"));
+        return;
+    }
+
     doOperation_(OP_RATE, genUrl(OP_RATE));
 }
 
 void Client::doTrash()
 {
+    if (!login_) {
+        emit(operationFinish(OP_TRASH, false, "not login"));
+        return;
+    }
+
+    if (playlistEmpty()) {
+        emit(operationFinish(OP_TRASH, false, "playlist empty"));
+        return;
+    }
+
     doOperation_(OP_TRASH, genUrl(OP_TRASH));
 }
 
 void Client::doUpdatePlaylist(int ch_id)
 {
     doOperation_(OP_UPDTE_PLAYLIST, genUrl(OP_UPDTE_PLAYLIST, ch_id));
+}
+
+bool Client::playlistEmpty()
+{
+    return track_ >= playlist_.size();
 }
 
 QUrl Client::genUrl(OpType type, int ch_id)
@@ -203,12 +247,11 @@ void Client::operationFinish_(Client::OpType type, bool success,
             qDebug() << "refresh channel" << channel_;
             break;
         case OP_END:
+        case OP_SKIP:
+        case OP_TRASH:
+            ++track_;
             break;
         case OP_RATE:
-            break;
-        case OP_SKIP:
-            break;
-        case OP_TRASH:
             break;
         case OP_UPDTE_PLAYLIST:
             playlist_ = obj["song"].toArray();

@@ -73,6 +73,7 @@ public:
 
     QString getSid();
     bool getLike();
+    bool playlistEmpty();
 signals:
     void operationFinish(OpType type, bool success, QString message);
 
