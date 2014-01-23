@@ -111,7 +111,12 @@ void Client::refreshChannel()
 void Client::doEnd()
 {
     if (playlistEmpty()) {
-        emit(operationFinish(OP_TRASH, false, "playlist empty"));
+        emit(operationFinish(OP_END, false, "playlist empty"));
+        return;
+    }
+
+    if (!login_) {
+        emit(operationFinish(OP_END, true, ""));
         return;
     }
 
@@ -121,7 +126,12 @@ void Client::doEnd()
 void Client::doSkip()
 {
     if (playlistEmpty()) {
-        emit(operationFinish(OP_TRASH, false, "playlist empty"));
+        emit(operationFinish(OP_SKIP, true, "playlist empty"));
+        return;
+    }
+
+    if (!login_) {
+        emit(operationFinish(OP_SKIP, true, ""));
         return;
     }
 
