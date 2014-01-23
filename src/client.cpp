@@ -254,7 +254,8 @@ void Client::operationFinish_(Client::OpType type, bool success,
         switch (type) {
         case OP_REFRESH_CHANNEL:
             channel_ = obj["channels"].toArray();
-            qDebug() << "refresh channel" << channel_;
+            // qDebug() << "refresh channel" << channel_;
+            qDebug() << "channel refreshed, size:" << channel_.size();
             break;
         case OP_END:
         case OP_SKIP:
@@ -267,8 +268,8 @@ void Client::operationFinish_(Client::OpType type, bool success,
             playlist_ = obj["song"].toArray();
             track_ = 0;
 
-            qDebug() << "update playlist, channel:" << ch_id_ <<
-                        "return:" << obj;
+            qDebug() << "update playlist, channel:" << ch_id_;
+            // qDebug() << "playlist object:" << obj;
             break;
         }
     }
