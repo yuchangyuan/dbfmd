@@ -41,6 +41,11 @@ void Control::playerPositionChanged(qint64 pos)
 void Control::playerMediaStatusChanged(QMediaPlayer::MediaStatus status)
 {
     qDebug() << "player status:" << status;
+
+    if (QMediaPlayer::BufferedMedia == status) {
+    qDebug() << "info" << player_->trackInfo();
+    }
+
     if (QMediaPlayer::EndOfMedia == status) {
         client_->doEnd();
     }

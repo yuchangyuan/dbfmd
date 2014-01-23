@@ -7,8 +7,8 @@ Player::Player(QObject *parent) :
             SIGNAL(positionChanged(qint64)));
     connect(&qmp_, SIGNAL(mediaStatusChanged(QMediaPlayer::MediaStatus)),
             SIGNAL(mediaStatusChanged(QMediaPlayer::MediaStatus)));
-    connect(&qmp_, SIGNAL(bufferStatusChanged(int)),
-            SLOT(bufferStatusChanged(int)));
+    connect(&qmp_, SIGNAL(mediaStatusChanged(QMediaPlayer::MediaStatus)),
+            SLOT(mediaStatusChanged_(QMediaPlayer::MediaStatus)));
 }
 
 void Player::play()
@@ -27,7 +27,6 @@ void Player::pause()
 
 void Player::updateTrack(QJsonObject trackInfo, QUrl url)
 {
-
     // 1. stop current track
     qmp_.stop();
 
@@ -44,7 +43,11 @@ void Player::updateTrack(QJsonObject trackInfo, QUrl url)
     }
 }
 
-void Player::bufferStatusChanged(int status)
+QJsonObject Player::trackInfo()
 {
-    qDebug() << "player, buffer:" << status;
+    return trackInfo_;
+}
+
+void Player::mediaStatusChanged_(QMediaPlayer::MediaStatus status)
+{
 }

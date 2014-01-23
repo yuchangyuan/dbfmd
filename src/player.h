@@ -25,6 +25,7 @@ public:
     // cacehd version of current song info
     QJsonObject trackInfo();
 
+
 signals:
     void positionChanged(qint64 pos);
     void mediaStatusChanged(QMediaPlayer::MediaStatus status);
@@ -35,8 +36,7 @@ public slots:
     // the begin to play or just pause at beginning
     void updateTrack(QJsonObject trackInfo, QUrl url);
 private slots:
-    void bufferStatusChanged(int status);
-
+    void mediaStatusChanged_(QMediaPlayer::MediaStatus status);
 };
 
 #endif // PLAYER_H
