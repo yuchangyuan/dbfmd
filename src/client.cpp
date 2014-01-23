@@ -111,6 +111,7 @@ void Client::refreshChannel()
 void Client::doEnd()
 {
     if (playlistEmpty()) {
+        ++track_;
         emit(operationFinish(OP_END, false, "playlist empty"));
         return;
     }
@@ -126,6 +127,7 @@ void Client::doEnd()
 void Client::doSkip()
 {
     if (playlistEmpty()) {
+        ++track_;
         emit(operationFinish(OP_SKIP, true, "playlist empty"));
         return;
     }
