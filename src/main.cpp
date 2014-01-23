@@ -1,4 +1,3 @@
-#include <QCoreApplication>
 #include <QTextStream>
 #include <QDebug>
 #include <QString>
@@ -6,9 +5,19 @@
 #include "client.h"
 #include "control.h"
 
+#ifdef Q_OS_OSX
+#include <QGuiApplication>
+#else
+#include <QCoreApplication>
+#endif
+
 int main(int argc, char *argv[])
 {
+#ifdef Q_OS_OSX
+    QGuiApplication a(argc, argv);
+#else
     QCoreApplication a(argc, argv);
+#endif
 
     if (a.arguments().size() < 2) {
         qDebug() << "Not specify token file, do login.";

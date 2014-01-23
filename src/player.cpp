@@ -36,7 +36,7 @@ void Player::updateTrack(QJsonObject trackInfo, QUrl url)
 
     // 3. setup use new url
     qDebug() << "player, play url:" << url;
-    qmp_.setMedia(QMediaContent(url));
+    qmp_.setMedia(url);
 
     // 4. playr or pause
     if (playing_) {
@@ -48,4 +48,3 @@ void Player::bufferStatusChanged(int status)
 {
     qDebug() << "player, buffer:" << status;
 }
-

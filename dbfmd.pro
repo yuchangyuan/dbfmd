@@ -8,12 +8,16 @@ QT       += core network multimedia
 
 QT       -= gui
 
+macx {
+    # QMediaPlayer not work with QCoreApplication on Mac OS X
+    QT += gui
+}
+
 TARGET = dbfmd
 CONFIG   += console
 CONFIG   -= app_bundle
 
 TEMPLATE = app
-
 
 SOURCES += src/main.cpp \
     src/login.cpp \
