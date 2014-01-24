@@ -31,4 +31,10 @@ HEADERS += \
     src/client.h \
     src/operationprocessor.h \
     src/control.h \
-    src/player.h
+    src/player.h \
+    include/nzmqt/nzmqt.hpp
+
+INCLUDEPATH += include
+
+# please create a symbol link of libzmq.a
+LIBS += $$system(PWD)/libzmq.a
