@@ -2,3 +2,8 @@
 *.txt
 *.json
 *.swp
+moc_*.cpp
+*.o
+*.a
+Makefile
+/dbfmd
