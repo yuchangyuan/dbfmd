@@ -47,10 +47,10 @@ void Control::playerMediaStatusChanged(QMediaPlayer::MediaStatus status)
     }
 
     if (QMediaPlayer::EndOfMedia == status) {
-        client_->doEnd();
+        QString msg;
+        client_->doEnd(msg);
     }
 }
-
 
 void Control::clientOperationFinish(Client::OpType type, bool success, QString message)
 {
@@ -79,4 +79,14 @@ void Control::clientOperationFinish(Client::OpType type, bool success, QString m
     case Client::OP_REFRESH_CHANNEL:
         break;
     }
+}
+
+bool Control::doOperation(Client::OpType type, QString &message, int ch_id)
+{
+    return client_->doOperation(type, message, ch_id);
+}
+
+QJsonObject Control::trackInfo()
+{
+    return player_->trackInfo();
 }

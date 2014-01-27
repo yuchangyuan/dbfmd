@@ -5,6 +5,7 @@
 #include "client.h"
 #include "player.h"
 #include <QMediaPlayer>
+#include <QJsonObject>
 
 class Control : public QObject
 {
@@ -19,6 +20,8 @@ public:
     explicit Control(Client *client, Player *player, QObject *parent = 0);
 
     void start();
+    bool doOperation(Client::OpType type, QString& message, int ch_id = -1);
+    QJsonObject trackInfo();
 signals:
 
 public slots:

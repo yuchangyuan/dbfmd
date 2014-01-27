@@ -58,12 +58,12 @@ public:
     QJsonArray channelList();
 
     // song operation, should only operate in single thread
-    void doOperation(OpType type, int ch_id = -1);
+    bool doOperation(OpType type, QString& message, int ch_id = -1);
 
-    void doEnd(); // song finish normally
-    void doSkip(); // current song skipped
-    void doRate(); // like/unlike current song
-    void doTrash(); // trash current song
+    bool doEnd(QString& message); // song finish normally
+    bool doSkip(QString& message); // current song skipped
+    bool doRate(QString& message); // like/unlike current song
+    bool doTrash(QString& message); // trash current song
     void doUpdatePlaylist(int ch_id = -1);  // get playlist
 
     // current status

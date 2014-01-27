@@ -77,24 +77,20 @@ Client* Client::create(QString login_json, QObject *parent)
     return c;
 }
 
-void Client::doOperation(OpType type, int ch_id)
+bool Client::doOperation(OpType type, QString& message, int ch_id)
 {
     switch (type) {
     case OP_REFRESH_CHANNEL:
         refreshChannel();
-        break;
+        return true;
     case OP_END:
-        doEnd();
-        break;
+        return doEnd(message);
     case OP_RATE:
-        doRate();
-        break;
+        return doRate(message);
     case OP_SKIP:
-        doSkip();
-        break;
+        return doSkip(message);
     case OP_TRASH:
-        doTrash();
-        break;
+        return doTrash(message);
     case OP_UPDTE_PLAYLIST:
         doUpdatePlaylist(ch_id);
         break;
@@ -108,66 +104,70 @@ void Client::refreshChannel()
     doOperation_(OP_REFRESH_CHANNEL, QUrl(CHANNEL_URL));
 }
 
-void Client::doEnd()
+bool Client::doEnd(QString& message)
 {
     if (playlistEmpty()) {
-        emit(operationFinish(OP_END, false, "playlist empty"));
-        return;
+        message = "playlist empty";
+        return false;
     }
 
     if (!login_) {
         ++track_;
         emit(operationFinish(OP_END, true, ""));
-        return;
+        return true;
     }
 
     doOperation_(OP_END, genUrl(OP_END));
+    return true;
 }
 
-void Client::doSkip()
+bool Client::doSkip(QString& message)
 {
     if (playlistEmpty()) {
-        emit(operationFinish(OP_SKIP, true, "playlist empty"));
-        return;
+        message = "playlist empty";
+        return false;
     }
 
     if (!login_) {
         ++track_;
         emit(operationFinish(OP_SKIP, true, ""));
-        return;
+        return true;
     }
 
     doOperation_(OP_SKIP, genUrl(OP_SKIP));
+    return true;
 }
 
-void Client::doRate()
+bool Client::doRate(QString& message)
 {
     if (!login_) {
-        emit(operationFinish(OP_TRASH, false, "not login"));
-        return;
+        message = "not login";
+        return false;
     }
 
     if (playlistEmpty()) {
-        emit(operationFinish(OP_TRASH, false, "playlist empty"));
-        return;
+        message = "playlist empty";
+        return false;
     }
 
     doOperation_(OP_RATE, genUrl(OP_RATE));
+    return true;
 }
 
-void Client::doTrash()
+bool Client::doTrash(QString& message)
 {
     if (!login_) {
-        emit(operationFinish(OP_TRASH, false, "not login"));
-        return;
+        message = "not login";
+        return false;
     }
 
     if (playlistEmpty()) {
-        emit(operationFinish(OP_TRASH, false, "playlist empty"));
-        return;
+        message = "playlist empty";
+        return false;
     }
 
     doOperation_(OP_TRASH, genUrl(OP_TRASH));
+    return true;
 }
 
 void Client::doUpdatePlaylist(int ch_id)
