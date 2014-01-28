@@ -4,6 +4,7 @@
 #include "login.h"
 #include "client.h"
 #include "control.h"
+#include "remotecontrol.h"
 
 #ifdef Q_OS_OSX
 #include <QGuiApplication>
@@ -35,6 +36,9 @@ int main(int argc, char *argv[])
         }
         Player *player = new Player(&a);
         Control *control = new Control(client, player, &a);
+
+        new RemoteControl(control, player, &a);
+
         control->start();
     }
 

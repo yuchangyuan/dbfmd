@@ -24,7 +24,8 @@ SOURCES += src/main.cpp \
     src/client.cpp \
     src/operationprocessor.cpp \
     src/control.cpp \
-    src/player.cpp
+    src/player.cpp \
+    src/remotecontrol.cpp
 
 HEADERS += \
     src/login.h \
@@ -32,6 +33,7 @@ HEADERS += \
     src/operationprocessor.h \
     src/control.h \
     src/player.h \
+    src/remotecontrol.h \
     include/nzmqt/nzmqt.hpp
 
 INCLUDEPATH += include
