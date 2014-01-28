@@ -53,3 +53,15 @@ req: ["ok"]
 
 ## PUB socket
 Publish any player status change to client.
+
+### info
+msg: ["info", track_info(json string) ]
+
+### pos
+msg: ["pos", position(int) ]
+
+### rate
+msg: ["rate", like(bool) ]
+
+### status
+msg: ["status", "playing"/"paused"/etc.]
