@@ -25,7 +25,7 @@ void Player::pause()
     qmp_.pause();
 }
 
-void Player::updateTrack(QJsonObject trackInfo, QUrl url)
+void Player::updateTrack(const QJsonObject trackInfo, QUrl url)
 {
     // 1. stop current track
     qmp_.stop();
@@ -50,4 +50,18 @@ QJsonObject Player::trackInfo()
 
 void Player::mediaStatusChanged_(QMediaPlayer::MediaStatus status)
 {
+}
+
+void Player::rate(QString sid)
+{
+    if (sid != trackInfo_["sid"].toString()) return;
+
+    if (0 != trackInfo_["like"].toInt()) {
+        trackInfo_["like"] = 0;
+        emit(rateChanged(false));
+    }
+    else {
+        trackInfo_["like"] = 1;
+        emit(rateChanged(true));
+    }
 }
