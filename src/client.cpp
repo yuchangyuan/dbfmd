@@ -269,16 +269,25 @@ void Client::operationFinish_(Client::OpType type, bool success,
             ++track_;
             break;
         case OP_RATE:
+            qDebug() << "rate, sid = " << message;
             for (int i = 0; i < playlist_.size(); ++i) {
                 if (playlist_[i].toObject()["sid"] == message) {
-                    if (0 == playlist_[i].toObject()["like"].toInt()) {
-                        playlist_[i].toObject()["like"] = 1;
+                    // qDebug() << "update rate of " << i;
+
+                    // NOTE: "playlist_[i].toObject()["like"] = 0;"
+                    // will not work!
+                    QJsonObject info = playlist_[i].toObject();
+
+                    if (0 == info["like"].toInt()) {
+                        info["like"] = 1;
                     }
                     else {
-                        playlist_[i].toObject()["like"] = 0;
+                        info["like"] = 0;
                     }
+                    playlist_[i] = info;
                 }
             }
+            // qDebug() << "playlist of current track: " << playlist_[track_];
             break;
         case OP_UPDTE_PLAYLIST:
             playlist_ = obj["song"].toArray();
