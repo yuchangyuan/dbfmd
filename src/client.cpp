@@ -268,6 +268,16 @@ void Client::operationFinish_(Client::OpType type, bool success,
             ++track_;
             break;
         case OP_RATE:
+            for (int i = 0; i < playlist_.size(); ++i) {
+                if (playlist_[i].toObject()["sid"] == message) {
+                    if (0 == playlist_[i].toObject()["like"].toInt()) {
+                        playlist_[i].toObject()["like"] = 1;
+                    }
+                    else {
+                        playlist_[i].toObject()["like"] = 0;
+                    }
+                }
+            }
             break;
         case OP_UPDTE_PLAYLIST:
             playlist_ = obj["song"].toArray();

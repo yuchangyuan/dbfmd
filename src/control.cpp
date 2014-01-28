@@ -52,11 +52,13 @@ void Control::playerMediaStatusChanged(QMediaPlayer::MediaStatus status)
     }
 }
 
-void Control::clientOperationFinish(Client::OpType type, bool success, QString message)
+void Control::clientOperationFinish(Client::OpType type, bool success,
+                     QString message)
 {
     if (!success) {
     // TODO
-        qDebug() << "client op fail, " << "type:" << type << "message:" << message;
+        qDebug() << "client op fail, " << "type:" << type << "message:"
+                 << message;
         return;
     }
 

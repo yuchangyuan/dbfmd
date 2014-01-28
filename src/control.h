@@ -22,6 +22,7 @@ public:
     void start();
     bool doOperation(Client::OpType type, QString& message, int ch_id = -1);
     QJsonObject trackInfo();
+
 signals:
 
 public slots:
