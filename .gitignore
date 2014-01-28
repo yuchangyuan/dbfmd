@@ -2,3 +2,5 @@
 *.txt
 *.json
 *.swp
+*.o
+*.a
