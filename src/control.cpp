@@ -35,7 +35,7 @@ void Control::updateTrack()
 
 void Control::playerPositionChanged(qint64 pos)
 {
-    qDebug() << "player pos: " << pos;
+    // qDebug() << "player pos: " << pos;
 }
 
 void Control::playerMediaStatusChanged(QMediaPlayer::MediaStatus status)
