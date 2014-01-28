@@ -13,13 +13,16 @@ class OperationProcessor : public QObject
 
     QNetworkReply* reply_;
     Client::OpType type_;
+    QString sid_;
+
 public:
     explicit OperationProcessor(QObject *parent = 0);
 
-    // set reply, connect signal to ready
-    void setReply(QNetworkReply *reply, Client::OpType type);
+    // set reply, connect signal to ready, sid is used when doEnd/doSkip/doRate
+    void setReply(QNetworkReply *reply, Client::OpType type, QString sid);
 
 signals:
+    // when success, message is sid
     void finish(Client::OpType type, bool success, QString message, QJsonObject obj);
 
 public slots:

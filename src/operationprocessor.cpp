@@ -8,10 +8,11 @@ OperationProcessor::OperationProcessor(QObject *parent) :
 
 }
 
-void OperationProcessor::setReply(QNetworkReply *reply, Client::OpType type)
+void OperationProcessor::setReply(QNetworkReply *reply, Client::OpType type, QString sid)
 {
     this->type_ = type;
     this->reply_ = reply;
+    this->sid_ = sid;
 
     connect(reply, SIGNAL(finished()), SLOT(ready()));
 }
@@ -23,7 +24,7 @@ void OperationProcessor::ready()
     QJsonParseError err;
     QJsonDocument doc = QJsonDocument::fromJson(data, &err);
     if (QJsonParseError::NoError == err.error) {
-        emit(finish(type_, true, "", doc.object()));
+        emit(finish(type_, true, sid_, doc.object()));
     }
     else {
         emit(finish(type_, false, err.errorString(), QJsonObject()));

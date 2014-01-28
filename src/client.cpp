@@ -246,7 +246,10 @@ void Client::doOperation_(OpType type, QUrl url)
 
     qDebug() << "request url:" << url;
     QNetworkReply *reply = manager_.get(QNetworkRequest(url));
-    cp->setReply(reply, type);
+
+    QString sid = playlist_[track_].toObject()["sid"].toString();
+
+    cp->setReply(reply, type, sid);
 }
 
 void Client::operationFinish_(Client::OpType type, bool success,
