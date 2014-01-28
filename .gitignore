@@ -4,3 +4,6 @@
 *.swp
 *.o
 *.a
+moc_*.cpp
+Makefile
+/dbfmd
