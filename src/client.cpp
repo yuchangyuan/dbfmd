@@ -93,10 +93,11 @@ bool Client::doOperation(OpType type, QString& message, int ch_id)
         return doTrash(message);
     case OP_UPDTE_PLAYLIST:
         doUpdatePlaylist(ch_id);
-        break;
+        return true;
     default:
         break;
     }
+    return false;
 }
 
 void Client::refreshChannel()
