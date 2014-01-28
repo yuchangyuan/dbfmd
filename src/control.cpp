@@ -75,6 +75,10 @@ void Control::clientOperationFinish(Client::OpType type, bool success, QString m
         }
         break;
     case Client::OP_RATE:
+        // TODO: update player_
+        // NOTE: should handle the condition when rate called before End/Skip,
+        // but return after End/Skip,
+        player_->rate(message); // message is sid
         break;
     case Client::OP_REFRESH_CHANNEL:
         break;
