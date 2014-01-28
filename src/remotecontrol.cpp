@@ -20,6 +20,14 @@ RemoteControl::RemoteControl(Control *control, Player *player,
             SLOT(request(QList<QByteArray>)));
 
     context_->start();
+
+    // connect player_
+    connect(player_, SIGNAL(mediaStatusChanged(QMediaPlayer::MediaStatus)),
+            SLOT(mediaStatusChanged(QMediaPlayer::MediaStatus)));
+    connect(player_, SIGNAL(positionChanged(qint64)),
+            SLOT(positionChanged(qint64)));
+    connect(player_, SIGNAL(rateChanged(bool)), SLOT(rateChanged(bool)));
+    connect(player_, SIGNAL(paused(bool)), SLOT(paused(bool)));
 }
 
 
@@ -102,4 +110,37 @@ void RemoteControl::reply(bool res, const QString err_msg, QByteArray *ok_msg)
     }
 
     sock_rep_->sendMessage(rep);
+}
+
+void RemoteControl::publish(QString type, QByteArray data)
+{
+    QList<QByteArray> pub;
+    pub << type.toUtf8();
+    pub << data;
+
+    sock_pub_->sendMessage(pub);
+}
+
+void RemoteControl::mediaStatusChanged(QMediaPlayer::MediaStatus status)
+{
+    if (QMediaPlayer::LoadingMedia == status) {
+        publish("info", QJsonDocument(player_->trackInfo()).toJson());
+    }
+}
+
+void RemoteControl::positionChanged(qint64 pos)
+{
+    QString pos_str;
+    QTextStream(&pos_str) << pos;
+    publish("pos", pos_str.toUtf8());
+}
+
+void RemoteControl::rateChanged(bool like)
+{
+    publish("rate", like ? "true" : "false");
+}
+
+void RemoteControl::paused(bool status)
+{
+    publish("status", status ? "paused" : "playing");
 }

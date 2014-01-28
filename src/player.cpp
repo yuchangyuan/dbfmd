@@ -16,6 +16,7 @@ void Player::play()
     if (playing_) return;
     playing_ = true;
     qmp_.play();
+    emit(paused(false));
 }
 
 void Player::pause()
@@ -23,6 +24,7 @@ void Player::pause()
     if (!playing_) return;
     playing_ = false;
     qmp_.pause();
+    emit(paused(true));
 }
 
 void Player::updateTrack(const QJsonObject trackInfo, QUrl url)

@@ -29,6 +29,7 @@ signals:
     void positionChanged(qint64 pos);
     void mediaStatusChanged(QMediaPlayer::MediaStatus status);
     void rateChanged(bool like);
+    void paused(bool status);
 
 public slots:
     // should be called when current song changed in client
