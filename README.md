@@ -80,3 +80,8 @@ msg: ["rate", like: bool ]
 
 ### status
 msg: ["status", "playing"/"paused"]
+
+# Reference
+https://github.com/zonyitoo/doubanfm-qt/wiki/%E8%B1%86%E7%93%A3FM-API
+https://github.com/akfish/fm-terminal/blob/master/douban-fm-api.md
+https://github.com/turingou/douban.fm
