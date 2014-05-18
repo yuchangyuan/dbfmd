@@ -1,6 +1,14 @@
 # Introduction
 A douban fm client, with remote control.
 
+# Installation
+
+For Ubuntu 14.04, please install follow dependency:
+- libzmq3-dev
+- qtmultimedia5-dev
+- libqt5multimedia5-plugins
+- gstreamer0.10-fluendo-mp3
+
 # Usage
 ## Login
 Run ``dbfmd`` without any parameter will do login operation. The program will prompt for email and password, then output the server response in json format.
