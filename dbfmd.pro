@@ -38,5 +38,11 @@ HEADERS += \
 
 INCLUDEPATH += include
 
-# please create a symbol link of libzmq.a
-LIBS += $$system(pwd)/libzmq.a
+macx {
+    # please create a symbol link of libzmq.a
+    LIBS += $$system(pwd)/libzmq.a
+}
+
+linux {
+    LIBS += -lzmq
+}
