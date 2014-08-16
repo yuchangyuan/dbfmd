@@ -38,7 +38,7 @@ public slots:
     void updateTrack(const QJsonObject trackInfo, QUrl url);
 
     // update rate status after rate/unrate a track;
-    void rate(QString sid);
+    void rate(QString sid, bool like);
 private slots:
     void mediaStatusChanged_(QMediaPlayer::MediaStatus status);
 };

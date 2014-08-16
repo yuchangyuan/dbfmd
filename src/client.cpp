@@ -85,8 +85,10 @@ bool Client::doOperation(OpType type, QString& message, int ch_id)
         return true;
     case OP_END:
         return doEnd(message);
-    case OP_RATE:
-        return doRate(message);
+    case OP_LIKE:
+        return doRate(message, true);
+    case OP_UNLIKE:
+        return doRate(message, false);
     case OP_SKIP:
         return doSkip(message);
     case OP_TRASH:
@@ -139,7 +141,7 @@ bool Client::doSkip(QString& message)
     return true;
 }
 
-bool Client::doRate(QString& message)
+bool Client::doRate(QString& message, bool like)
 {
     if (!login_) {
         message = "not login";
@@ -151,7 +153,8 @@ bool Client::doRate(QString& message)
         return false;
     }
 
-    doOperation_(OP_RATE, genUrl(OP_RATE));
+    if (like) doOperation_(OP_LIKE, genUrl(OP_LIKE));
+    else doOperation_(OP_UNLIKE, genUrl(OP_UNLIKE));
     return true;
 }
 
@@ -213,13 +216,11 @@ QUrl Client::genUrl(OpType type, int ch_id)
     case OP_END:
         q.addQueryItem("type", "e");
         break;
-    case OP_RATE:
-        if (getLike()) {
-            q.addQueryItem("type", "u");
-        }
-        else {
-            q.addQueryItem("type", "r");
-        }
+    case OP_LIKE:
+        q.addQueryItem("type", "r");
+        break;
+    case OP_UNLIKE:
+        q.addQueryItem("type", "u");
         break;
     case OP_SKIP:
         q.addQueryItem("type", "s");
@@ -268,7 +269,8 @@ void Client::operationFinish_(Client::OpType type, bool success,
         case OP_TRASH:
             ++track_;
             break;
-        case OP_RATE:
+        case OP_LIKE:
+        case OP_UNLIKE:
             qDebug() << "rate, sid = " << message;
             for (int i = 0; i < playlist_.size(); ++i) {
                 if (playlist_[i].toObject()["sid"] == message) {
@@ -277,13 +279,8 @@ void Client::operationFinish_(Client::OpType type, bool success,
                     // NOTE: "playlist_[i].toObject()["like"] = 0;"
                     // will not work!
                     QJsonObject info = playlist_[i].toObject();
+                    info["like"] = (OP_LIKE == type) ? 1 : 0;
 
-                    if (0 == info["like"].toInt()) {
-                        info["like"] = 1;
-                    }
-                    else {
-                        info["like"] = 0;
-                    }
                     playlist_[i] = info;
                 }
             }

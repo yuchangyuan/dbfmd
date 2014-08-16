@@ -54,16 +54,10 @@ void Player::mediaStatusChanged_(QMediaPlayer::MediaStatus status)
 {
 }
 
-void Player::rate(QString sid)
+void Player::rate(QString sid, bool like)
 {
     if (sid != trackInfo_["sid"].toString()) return;
 
-    if (0 != trackInfo_["like"].toInt()) {
-        trackInfo_["like"] = 0;
-        emit(rateChanged(false));
-    }
-    else {
-        trackInfo_["like"] = 1;
-        emit(rateChanged(true));
-    }
+    trackInfo_["like"] = like ? 1 : 0;
+    emit(rateChanged(like));
 }

@@ -79,11 +79,12 @@ void Control::clientOperationFinish(Client::OpType type, bool success,
             updateTrack();
         }
         break;
-    case Client::OP_RATE:
+    case Client::OP_LIKE:
+    case Client::OP_UNLIKE:
         // TODO: update player_
         // NOTE: should handle the condition when rate called before End/Skip,
         // but return after End/Skip,
-        player_->rate(message); // message is sid
+        player_->rate(message, (type == Client::OP_LIKE)); // message is sid
         break;
     case Client::OP_REFRESH_CHANNEL:
         break;
@@ -95,7 +96,3 @@ bool Control::doOperation(Client::OpType type, QString &message, int ch_id)
     return client_->doOperation(type, message, ch_id);
 }
 
-QJsonObject Control::trackInfo()
-{
-    return player_->trackInfo();
-}

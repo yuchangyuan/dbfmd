@@ -13,7 +13,7 @@ class Client : public QObject
 public:
     // type
     typedef enum OpType_ {
-        OP_END, OP_SKIP, OP_RATE, OP_TRASH,
+        OP_END, OP_SKIP, OP_LIKE, OP_UNLIKE, OP_TRASH,
         OP_UPDTE_PLAYLIST, OP_REFRESH_CHANNEL
     } OpType;
 
@@ -62,7 +62,7 @@ public:
 
     bool doEnd(QString& message); // song finish normally
     bool doSkip(QString& message); // current song skipped
-    bool doRate(QString& message); // like/unlike current song
+    bool doRate(QString& message, bool like); // like/unlike current song
     bool doTrash(QString& message); // trash current song
     void doUpdatePlaylist(int ch_id = -1);  // get playlist
 

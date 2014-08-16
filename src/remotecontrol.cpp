@@ -41,7 +41,7 @@ void RemoteControl::request(QList<QByteArray> req)
     qDebug() << "get remote request" << req;
 
     if ("info" == req[0]) {
-        QByteArray ok_msg(QJsonDocument(control_->trackInfo()).toJson());
+        QByteArray ok_msg(QJsonDocument(player_->trackInfo()).toJson());
         reply(true, "", &ok_msg);
         return;
     }
@@ -53,7 +53,26 @@ void RemoteControl::request(QList<QByteArray> req)
     }
 
     if ("rate" == req[0]) {
-        res = control_->doOperation(Client::OP_RATE, err_msg);
+        Client::OpType op = Client::OP_LIKE;
+	bool toggle = true;
+
+        if (req.size() > 1) {
+            if ("true" == req[1]) op = Client::OP_LIKE;
+            else if ("false" == req[1]) op = Client::OP_UNLIKE;
+            else {
+                reply(false, "should only rate 'true' of 'false'");
+                return;
+            }
+
+            toggle = false;
+        }
+
+        if (toggle) {
+            bool like = (player_->trackInfo()["like"].toInt() != 0);
+            op = like ? Client::OP_UNLIKE : Client::OP_LIKE;
+        }
+
+        res = control_->doOperation(op, err_msg);
         reply(res, err_msg);
         return;
     }

@@ -47,8 +47,10 @@ rep: ["error", "message"] or ["ok"]
 ### rate
 Rate or unrate current track.
 
-req: ["rate"]
+req: ["rate", like]
 rep: ["error", "message"] or ["ok"]
+
+Argument 'like' is optional, rate when "true", unrate otherwise, toggle when not exist.
 
 ### trash
 Trash current track
